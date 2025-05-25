@@ -1,0 +1,84 @@
+本教程提供基于Docker的一键式部署方案，帮助开发者在单机环境快速搭建完整的FISCO BCOS区块链管理平台，适用于本地开发测试、快速体验和教学演示场景。
+
+部署内容
+通过本方案，您将自动获得以下组件：
+区块链节点（FISCO BCOS 2.9.1，支持国密/非国密双模式）
+WeBASE管理平台（可视化节点监控与合约管理）
+
+### 实验环境
+
+| 环境 |操作系统 |
+|---|---|
+| 版本 |Ubuntu 20.04.6 LTS |
+
+### 非国密
+
+**启动FISCO服务** 
+
+[搭建区块链的压缩包](https://blog.csdn.net/2401_86836547/article/details/148213520?spm=1001.2014.3001.5502)下载压缩包到ubuntu
+
+解压，创建fisco目录，把解压的文件都放放到目录下
+```
+unzip blcokchain.zip
+mv fisco-bcos fisco/
+......
+```
+
+ **安装 openssl 和 curl**
+```
+sudo apt-get install openssl curl -y
+```
+ **导入build_sh脚本修改权限** 
+
+给文件最大权限，修改文件的所有者和组
+> blockchain:blockchain 这里的blockchain是你ubuntu的用户名
+```
+sudo chmod 777 fisco/build_chain.sh
+sudo chmod 777 fisco/fisco-bcos
+sudo chown blockchain:blockchain *
+```
+ **导入fisco—bcos安装包修改权限** 
+
+创建bin目录，在fisco目录下把fisco-bcos文件移动到bin目录
+```
+mkdir bin/
+mv fisco-bcos bin/
+```
+编写node_list文件
+
+```
+gedit node_list
+```
+编写ip，节点数，机构名，组名，端口
+![编写ip，节点数，机构名，组名，端口](https://foruda.gitee.com/images/1748183898847511605/fc311545_15084230.png "屏幕截图")
+
+ **生成fisco启动脚本** 
+
+```
+bash build_chain.sh -f node_list -e bin/fisco-bcos -o blockchain
+```
+![正确输出如下](https://foruda.gitee.com/images/1748184254411527677/020e6c18_15084230.jpeg "fisco脚本.jpg")
+
+ **进入目录启动脚本** 
+
+```
+cd blockchain/127.0.0.1
+bash start_all.sh
+```
+![脚本启动](https://foruda.gitee.com/images/1748184445073748457/5109a8f1_15084230.jpeg "脚本启动.jpg")
+
+ **检查进程** 
+
+```
+ps -ef | grep -v grep | grep fisco-bcos
+```
+![检查进程](https://foruda.gitee.com/images/1748184550194281476/775703ca_15084230.jpeg "检查进程.jpg")
+
+ **检查节点连接情况** 
+
+```
+cd node0/log
+ls     
+cat log_2025052507.45.log | grep connected    #查看日志文件
+```
+
